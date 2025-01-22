@@ -279,7 +279,7 @@ export default function Lab1() {
         &nbsp;to get dummy text<br/>
 
         Please&nbsp;
-        <a href="https://www.github.com" id="wd-github">click here</a>
+        <a href="https://github.com/SICT-1281/kambaz-react-web-app" id="wd-github">click here</a>
         &nbsp;to get to my code repository on GitHub<br/>
 
         
