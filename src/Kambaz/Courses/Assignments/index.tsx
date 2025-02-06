@@ -5,7 +5,7 @@ import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
 import { TbNotebook } from "react-icons/tb";
 import "./assignmentstyle.css"
-import { Form, Row, Col, Button, Card } from 'react-bootstrap'; 
+import { Form} from 'react-bootstrap'; 
 export default function Assignments() {
     return (
       <div>
