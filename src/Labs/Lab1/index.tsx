@@ -1,6 +1,7 @@
+import Container from 'react-bootstrap/Container';
 export default function Lab1() {
     return (
-    <div id="wd-lab1">
+    <Container>
         <h2>Lab 1</h2>
         <h3>HTML Examples</h3>
         <div id="wd-h-tag">
@@ -283,7 +284,7 @@ export default function Lab1() {
         &nbsp;to get to my code repository on GitHub<br/>
 
         
-    </div>
+    </Container>
 );}
 
   
