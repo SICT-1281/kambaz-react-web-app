@@ -31,10 +31,10 @@ export default function Assignments() {
 </a></Form.Label>
           <br></br>
           <Form.Label>
-            <p id="wd-A-1">
-            Multiple Modules | <strong>Not available until</strong> May 6 at 12:00am |  &nbsp;
-            <strong>Due</strong> May 13 at 11:59pm | 100 pts
-            </p>
+          <p id="wd-A-1">
+  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | &nbsp;
+  <strong>Due</strong> May 13 at 11:59pm | 100 pts
+</p>
             
 
           </Form.Label>
@@ -61,10 +61,10 @@ export default function Assignments() {
   A2
 </a></Form.Label>
           <br></br>
-          <Form.Label><p id="wd-A-1">
-            Multiple Modules | <strong>Not available until</strong> May 6 at 12:00am |  &nbsp;
-            <strong>Due</strong> May 13 at 11:59pm | 100 pts
-            </p></Form.Label>
+          <Form.Label><p id="wd-A-2">
+  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | &nbsp;
+  <strong>Due</strong> May 13 at 11:59pm | 100 pts
+</p></Form.Label>
         </Form.Group>
       <LessonControlButtons />
       
@@ -85,10 +85,10 @@ export default function Assignments() {
   A3
 </a></Form.Label>
           <br></br>
-          <Form.Label><p id="wd-A-1">
-            Multiple Modules | <strong>Not available until</strong> May 6 at 12:00am |  &nbsp;
-            <strong>Due</strong> May 13 at 11:59pm | 100 pts
-            </p></Form.Label>
+          <Form.Label><p id="wd-A-3">
+  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | &nbsp;
+  <strong>Due</strong> May 13 at 11:59pm | 100 pts
+</p></Form.Label>
         </Form.Group>
       <LessonControlButtons />
       

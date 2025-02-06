@@ -24,11 +24,11 @@ export default function EditAssignment() {
           />
         </Form.Group>
 
-        {/* Points */}
         <Form.Group controlId="points" className="mb-3">
         <Row>
           <Col sm={3}>
-            <Form.Label >Points</Form.Label>
+          <Form.Label className="d-flex justify-content-end">Points</Form.Label>
+
           </Col>
           <Col sm={9}>
             <Form.Control type="number" defaultValue={100} />
@@ -40,7 +40,7 @@ export default function EditAssignment() {
       <Form.Group controlId="assignmentGroup" className="mb-3">
         <Row>
           <Col sm={3}>
-            <Form.Label>Assignment Group</Form.Label>
+            <Form.Label className="d-flex justify-content-end">Assignment Group</Form.Label>
           </Col>
           <Col sm={9}>
             <Form.Control as="select" defaultValue="ASSIGNMENTS">
@@ -53,11 +53,10 @@ export default function EditAssignment() {
         </Row>
       </Form.Group>
 
-        {/* Grade Display */}
         <Form.Group controlId="displayGrade" className="mb-3">
         <Row>
           <Col sm={3}>
-            <Form.Label>Display Grade as</Form.Label>
+            <Form.Label className="d-flex justify-content-end">Display Grade as</Form.Label>
           </Col>
           <Col sm={9}>
             <Form.Control as="select" defaultValue="Percentage">
@@ -71,21 +70,20 @@ export default function EditAssignment() {
 
         <Row>
           <Col sm={3}>
-            <Form.Label>Submission Type</Form.Label>
+            <Form.Label className="d-flex justify-content-end">Submission Type</Form.Label>
           </Col>
           <Col sm={9}>
         <Card className="mb-3">
       <Card.Body>
-        {/* Submission Type Section */}
         <Form.Group controlId="submissionType" className="mb-3">
-          <Form.Label>Submission Type</Form.Label>
+          <Form.Label >Submission Type</Form.Label>
           <Form.Control as="select">
             <option>Online</option>
             <option>In Person</option>
           </Form.Control>
         </Form.Group>
 
-        {/* Online Entry Options Section */}
+  
         <Form.Group controlId="onlineEntryOptions" className="mb-3">
           <Form.Label>Online Entry Options</Form.Label>
           <div>
@@ -104,12 +102,11 @@ export default function EditAssignment() {
 
     <Row>
           <Col sm={3}>
-            <Form.Label>Assign</Form.Label>
+            <Form.Label className="d-flex justify-content-end">Assign</Form.Label>
           </Col>
           <Col sm={9}>
           <Card className="mb-3">
           <Card.Body>
-      {/* Assign Section */}
       <Form.Group controlId="assignTo" className="mb-3">
         <Form.Label>Assign to</Form.Label>
         <Form.Control as="select" defaultValue="Everyone">

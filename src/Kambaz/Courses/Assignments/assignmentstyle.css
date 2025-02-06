@@ -7,3 +7,6 @@ p {
     font-size: 14px; 
 
   }
+.text-right {
+    text-align: right;
+  }
