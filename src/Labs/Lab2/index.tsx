@@ -105,16 +105,6 @@ This heading has same style as paragraph above
   <BootstrapLists />
   <BootstrapForms />
   <BootstrapNavigation />
-
-  
-
-      
-      
-
-
-
-
-      
   </Container>
     );
     }

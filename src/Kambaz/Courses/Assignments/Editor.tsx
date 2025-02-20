@@ -1,6 +1,32 @@
 import { Form, Row, Col, Button, Card } from 'react-bootstrap'; 
-
+import { Link } from "react-router-dom";
+import { useParams , useLocation } from "react-router";
+import * as db from "../../Database";
 export default function EditAssignment() {
+  const { cid } = useParams();
+  const { pathname } = useLocation();
+  const pathSegments = pathname.split("/");
+  const assignmentId = pathSegments[pathSegments.length - 1];
+  const assignment = db.assignments.find((assignment) => assignment._id === assignmentId);
+
+
+  function convertToDatetimeLocal(dateString: string): string {
+    const [monthStr, day, , timeStr] = dateString.split(" "); 
+    const months: { [key: string]: string } = {
+      "January": "01", "February": "02", "March": "03", "April": "04",
+      "May": "05", "June": "06", "July": "07", "August": "08",
+      "September": "09", "October": "10", "November": "11", "December": "12"
+    };
+    const month = months[monthStr as keyof typeof months] || "01";
+    let [hour, minute] = timeStr.match(/\d+/g) ?? ["00", "00"]; 
+    const isPM = timeStr.includes("pm");
+    if (isPM && hour !== "12") hour = String(Number(hour) + 12); 
+    if (!isPM && hour === "12") hour = "00"; 
+    const year = new Date().getFullYear();
+    return `${year}-${month}-${day.padStart(2, "0")}T${hour.padStart(2, "0")}:${minute}`;
+  }
+
+
   return (
     <div className="p-4">
       
@@ -10,7 +36,7 @@ export default function EditAssignment() {
         <Form.Group controlId="assignmentName" className="mb-3">
           <Form.Label>Assignment Name</Form.Label>
           <br></br>
-          <Form.Control type="text" defaultValue="A1" />
+          <Form.Control type="text" defaultValue={assignment ? assignment.title : ""} />
         </Form.Group>
 
         {/* Description */}
@@ -19,8 +45,7 @@ export default function EditAssignment() {
           <Form.Control 
             as="textarea" 
             rows={4} 
-            defaultValue="The assignment is available online Submit a link to the landing page of your Web application running on Netlify. The landing page should include the following: Your full name and section. Links to each of the lab assignments Link to the Kanbas application Links to all relevant source code repositories. The Kanbas application should include a link to navigate back to the landing page.
-"
+            defaultValue={assignment ? assignment.description : ""}
           />
         </Form.Group>
 
@@ -31,7 +56,7 @@ export default function EditAssignment() {
 
           </Col>
           <Col sm={9}>
-            <Form.Control type="number" defaultValue={100} />
+            <Form.Control type="number" defaultValue={assignment ? parseInt(assignment.points) || 0 : 0} />
           </Col>
         </Row>
       </Form.Group>
@@ -113,6 +138,7 @@ export default function EditAssignment() {
               <option>Everyone</option>
               <option>Section 101</option>
               <option>Section 102</option>
+              <option>Section 103</option>
             </Form.Control>
       </Form.Group>
 
@@ -122,7 +148,7 @@ export default function EditAssignment() {
           <Col>
             <Form.Group controlId="dueDate">
               <Form.Label>Due</Form.Label>
-              <Form.Control type="datetime-local" />
+              <Form.Control type="datetime-local" defaultValue={assignment ? convertToDatetimeLocal(assignment.duedate) : ""}/>
             </Form.Group>
           </Col>
           </Row>
@@ -132,7 +158,7 @@ export default function EditAssignment() {
           <Col sm={6}>
             <Form.Group controlId="availableFrom">
               <Form.Label>Available from</Form.Label>
-              <Form.Control type="datetime-local" />
+              <Form.Control type="datetime-local" defaultValue={assignment ? convertToDatetimeLocal(assignment.startdate) : ""}/>
             </Form.Group>
           </Col>
 
@@ -151,8 +177,13 @@ export default function EditAssignment() {
 
         <hr />
         <div style={{ textAlign: 'right' }} className="justify-content-between">
-          <Button variant="secondary" className="me-2">Cancel</Button>
+        <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+        <Button variant="secondary" className="me-2">Cancel</Button>
+          </Link>
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
           <Button variant="danger">Save</Button>
+          </Link>
+          
         </div>
       </Form>
     </div>

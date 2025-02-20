@@ -12,8 +12,9 @@ export default function AssignmentControls() {
       placeholder="Search..."
       aria-label="Search"
     />
+
   </InputGroup>
-  <Button variant="outline-secondary" size="lg" className="me-1 float-end ms-5 " id="wd-add-group-btn">
+  <Button variant="outline-secondary" size="lg" className="ms-auto float-end me-1" id="wd-add-group-btn">
        <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />Group
      </Button>
      <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-assignment-btn">
