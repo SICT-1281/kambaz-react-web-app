@@ -1,16 +1,44 @@
 import { Form, Row, Col, Button, Card } from 'react-bootstrap'; 
 import { Link } from "react-router-dom";
 import { useParams , useLocation } from "react-router";
-import * as db from "../../Database";
+import { addAssignment, updateAssignment } from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from 'react';
 export default function EditAssignment() {
   const { cid } = useParams();
   const { pathname } = useLocation();
   const pathSegments = pathname.split("/");
   const assignmentId = pathSegments[pathSegments.length - 1];
-  const assignment = db.assignments.find((assignment) => assignment._id === assignmentId);
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const assignment = assignments.find((a: any) => a._id === assignmentId);
+  const dispatch = useDispatch();
 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [points, setPoints] = useState("");
+  const [startdate, setStartdate] = useState("");
+  const [duedate, setDuedate] = useState("");
+  const [untildate, setUntildate] = useState("");
+
+  useEffect(() => {
+    if (assignment) {
+      setTitle(assignment.title || "");
+      setDescription(assignment.description || "");
+      setPoints(assignment.points || "100 pts");
+      setStartdate(assignment.startdate || "");
+      setDuedate(assignment.duedate || "");
+      setUntildate(assignment.untildate || "");
+    } else {
+      setTitle("New Assignment");
+      setDescription("New Assignment Description");
+      setPoints("100 pts");
+    }
+  }, [assignment]);
 
   function convertToDatetimeLocal(dateString: string): string {
+    if (!dateString.includes(" ")) {
+      return dateString;
+    }
     const [monthStr, day, , timeStr] = dateString.split(" "); 
     const months: { [key: string]: string } = {
       "January": "01", "February": "02", "March": "03", "April": "04",
@@ -22,9 +50,66 @@ export default function EditAssignment() {
     const isPM = timeStr.includes("pm");
     if (isPM && hour !== "12") hour = String(Number(hour) + 12); 
     if (!isPM && hour === "12") hour = "00"; 
-    const year = new Date().getFullYear();
+    let year = new Date().getFullYear(); 
     return `${year}-${month}-${day.padStart(2, "0")}T${hour.padStart(2, "0")}:${minute}`;
+    // return dateString;
   }
+
+  function ConvertToCustomTime(dateString: string): string {
+    const date = new Date(dateString);
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const month = monthNames[date.getMonth()];  
+    const day = date.getDate();                 
+    let hour = date.getHours();                  
+    const minute = date.getMinutes();      
+    let ampm = "am";
+    if (hour === 0) {
+      hour = 12;     
+    } else if (hour === 12) {
+      ampm = "pm";   
+    } else if (hour > 12) {
+      hour = hour - 12; 
+      ampm = "pm";
+    }
+    const minuteStr = minute.toString().padStart(2, "0");
+  
+    return `${month} ${day} at ${hour}:${minuteStr}${ampm}`;
+  }
+
+  const handleSave = () => {
+    if (!assignments.some((a: any) => a._id === assignmentId)) {
+      dispatch(
+        addAssignment({
+          _id: assignmentId,
+          course: cid,
+          title,
+          description,
+          points,
+          startdate,
+          duedate,
+          untildate,
+          modules: assignment?.modules || "",
+        })
+      );
+    } else {
+      dispatch(
+        updateAssignment({
+          _id: assignmentId,
+          course: cid,
+          title,
+          description,
+          points,
+          startdate,
+          duedate,
+          untildate,
+          modules: assignment?.modules || "",
+        })
+      );
+    }
+  };
 
 
   return (
@@ -36,7 +121,8 @@ export default function EditAssignment() {
         <Form.Group controlId="assignmentName" className="mb-3">
           <Form.Label>Assignment Name</Form.Label>
           <br></br>
-          <Form.Control type="text" defaultValue={assignment ? assignment.title : ""} />
+          <Form.Control type="text" defaultValue={assignment ? assignment.title : "New Assignment"} 
+          onChange={(e) => setTitle(e.target.value)}/>
         </Form.Group>
 
         {/* Description */}
@@ -45,7 +131,8 @@ export default function EditAssignment() {
           <Form.Control 
             as="textarea" 
             rows={4} 
-            defaultValue={assignment ? assignment.description : ""}
+            defaultValue={assignment ? assignment.description : "New Assignment Description"}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </Form.Group>
 
@@ -56,7 +143,8 @@ export default function EditAssignment() {
 
           </Col>
           <Col sm={9}>
-            <Form.Control type="number" defaultValue={assignment ? parseInt(assignment.points) || 0 : 0} />
+            <Form.Control type="number" defaultValue={assignment ? parseInt(assignment.points) || 100 : 100} 
+            onChange={(e) => setPoints(e.target.value + " pts")}/>
           </Col>
         </Row>
       </Form.Group>
@@ -148,7 +236,8 @@ export default function EditAssignment() {
           <Col>
             <Form.Group controlId="dueDate">
               <Form.Label>Due</Form.Label>
-              <Form.Control type="datetime-local" defaultValue={assignment ? convertToDatetimeLocal(assignment.duedate) : ""}/>
+              <Form.Control type="datetime-local" defaultValue={assignment ? convertToDatetimeLocal(assignment.duedate) : ""}
+              onChange={(e) => setDuedate(ConvertToCustomTime(e.target.value))}/>
             </Form.Group>
           </Col>
           </Row>
@@ -158,7 +247,9 @@ export default function EditAssignment() {
           <Col sm={6}>
             <Form.Group controlId="availableFrom">
               <Form.Label>Available from</Form.Label>
-              <Form.Control type="datetime-local" defaultValue={assignment ? convertToDatetimeLocal(assignment.startdate) : ""}/>
+              <Form.Control type="datetime-local" defaultValue={assignment ? convertToDatetimeLocal(assignment.startdate) : ""}
+              onChange={(e) => setStartdate(ConvertToCustomTime(e.target.value))}
+              />
             </Form.Group>
           </Col>
 
@@ -166,7 +257,9 @@ export default function EditAssignment() {
           <Col sm={6}>
             <Form.Group controlId="untilDate">
               <Form.Label>Until</Form.Label>
-              <Form.Control type="datetime-local" />
+              <Form.Control type="datetime-local" defaultValue={assignment ? convertToDatetimeLocal(assignment.untildate) : ""}
+              onChange={(e) => setUntildate(ConvertToCustomTime(e.target.value))}
+              />
             </Form.Group>
           </Col>
         </Row>
@@ -181,7 +274,7 @@ export default function EditAssignment() {
         <Button variant="secondary" className="me-2">Cancel</Button>
           </Link>
           <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
-          <Button variant="danger">Save</Button>
+          <Button variant="danger" onClick={handleSave}>Save</Button>
           </Link>
           
         </div>

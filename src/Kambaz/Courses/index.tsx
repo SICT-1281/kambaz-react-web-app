@@ -6,14 +6,15 @@ import AssignmentEditor from "./Assignments/Editor";
 import { Navigate, Route, Routes , useParams , useLocation} from "react-router";
 import {FaAlignJustify} from "react-icons/fa"
 import PeopleTable from "./People/Table";
-import { courses , assignments } from "../Database";
-export default function Courses() {
+import { useSelector } from "react-redux";
+export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
   const { pathname } = useLocation();
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const assignmentIds = assignments
-    .filter((assignment) => assignment.course === cid)
-    .map((assignment) => assignment._id);
+    .filter((assignment: { course: string | undefined; }) => assignment.course === cid)
+    .map((assignment: { _id: any; }) => assignment._id);
 
   const assignmentRoutes = [];
     for (let i = 0; i < assignmentIds.length; i++) {
@@ -38,7 +39,8 @@ export default function Courses() {
               <Route path="Home" element={<Home />} />
               <Route path="Modules" element={<Modules />} />
               <Route path="Assignments" element={<Assignments />} />
-              {assignmentRoutes}
+              <Route path="Assignments/:assignmentId" element={<AssignmentEditor />} />
+              {/* {assignmentRoutes} */}
               <Route path="People" element={<PeopleTable />} />
             </Routes>
             </div>

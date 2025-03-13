@@ -7,12 +7,17 @@ import { TbNotebook } from "react-icons/tb";
 import "./assignmentstyle.css"
 import { Form} from 'react-bootstrap'; 
 import { useParams } from "react-router";
-import * as db from "../../Database";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAssignment }
+  from "./reducer";
 export default function Assignments() 
 {
   const { cid } = useParams();
-  const assignments = db.assignments;
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const dispatch = useDispatch();
+  const isFaculty = currentUser?.role === "FACULTY";
     return (
       <div>
   <AssignmentControls /><br /><br /><br /><br />
@@ -21,7 +26,8 @@ export default function Assignments()
   <ListGroup className="rounded-0" id="wd-modules">
     <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray bg-secondary">
     <div className="wd-title p-3 ps-2 bg-secondary">
-    <BsGripVertical className="me-2 fs-3" /> ASSIGNMENTS <ModuleControlButtons />
+    <BsGripVertical className="me-2 fs-3" /> ASSIGNMENTS 
+    {isFaculty && <ModuleControlButtons />}
     </div>
 
 
@@ -34,19 +40,24 @@ export default function Assignments()
 
             
       <ListGroup.Item className="wd-lesson p-3 ps-1 d-flex align-items-center">
+      
       <BsGripVertical className="fs-3" /> 
-      <TbNotebook className="me-2 fs-3 text-success" />
+      <TbNotebook className="me-2 fs-3 text-success" /> 
 
       <Form.Group controlId={`assignment-${assignment._id}`} className="mb-3">
-          <Form.Label> <Link
-                      to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
-                      className="wd-assignment-link text-decoration-none"
-                    >
-{assignment.title}
-</Link>
-      
 
-</Form.Label>
+      {isFaculty ? (
+    <Form.Label>
+    <Link
+      to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
+      className="wd-assignment-link text-decoration-none"
+    >
+      {assignment.title}
+    </Link>
+    </Form.Label>
+    ) : (
+    <Form.Label>{assignment.title}</Form.Label>
+)}
           <br></br>
           <Form.Label>
           <p id={`wd-${assignment._id}`}>
@@ -58,7 +69,13 @@ export default function Assignments()
           </Form.Label>
         </Form.Group>
         <div className="float-end ms-auto">
-      <LessonControlButtons/>
+        {currentUser?.role === "FACULTY" && (
+      
+      <LessonControlButtons assignmentId={assignment._id}
+      deleteAssignment={(assignmentId) => {
+        dispatch(deleteAssignment(assignmentId));
+      }}
+/> )}
       </div>
       
       </ListGroup.Item>
@@ -69,97 +86,3 @@ export default function Assignments()
     </div>
   );
 }
-  {/* <ListGroup className="rounded-0" id="wd-modules">
-    <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray bg-secondary">
-    <div className="wd-title p-3 ps-2 bg-secondary">
-    <BsGripVertical className="me-2 fs-3" /> ASSIGNMENTS <ModuleControlButtons />
-    </div>
-      <ListGroup className="wd-lessons rounded-0">
-      <ListGroup.Item className="wd-lesson p-3 ps-1 d-flex align-items-center">
-      <BsGripVertical className="fs-3" /> 
-      <TbNotebook className="me-2 fs-3 text-success" />
-      
-
-
-      <Form.Group controlId="assignmentName" className="mb-3">
-          <Form.Label> <a 
-  href="#/Kambaz/Courses/1234/Assignments/1"
-  className="wd-assignment-link"
->
-A1
-</a></Form.Label>
-          <br></br>
-          <Form.Label>
-          <p id="wd-A-1">
-  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | &nbsp;
-  <strong>Due</strong> May 13 at 11:59pm | 100 pts
-</p>
-            
-
-          </Form.Label>
-        </Form.Group>
-        <div className="float-end ms-auto">
-      <LessonControlButtons/>
-      </div>
-      
-    </ListGroup.Item>
-
-
-
-    </ListGroup>
-
-
-
-    <ListGroup className="wd-lessons rounded-0">
-    <ListGroup.Item className="wd-lesson p-3 ps-1 d-flex align-items-center">
-      <BsGripVertical className="fs-3" /> 
-      <TbNotebook className="me-2 fs-3 text-success" />
-      <Form.Group controlId="assignmentName" className="mb-3">
-          <Form.Label> <a 
-  href="#/Kambaz/Courses/1234/Assignments/2"
-  className="wd-assignment-link"
->
-  A2
-</a></Form.Label>
-          <br></br>
-          <Form.Label><p id="wd-A-2">
-  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | &nbsp;
-  <strong>Due</strong> May 13 at 11:59pm | 100 pts
-</p></Form.Label>
-        </Form.Group>
-        <div className="float-end ms-auto">
-      <LessonControlButtons/>
-      </div>
-      
-    </ListGroup.Item>
-
-
-
-
-
-    <ListGroup.Item className="wd-lesson p-3 ps-1 d-flex align-items-center">
-      <BsGripVertical className="fs-3" /> 
-      <TbNotebook className="me-2 fs-3 text-success" />
-      <Form.Group controlId="assignmentName" className="mb-3">
-          <Form.Label> <a 
-  href="#/Kambaz/Courses/1234/Assignments/3"
-  className="wd-assignment-link"
->
-  A3
-</a></Form.Label>
-          <br></br>
-          <Form.Label><p id="wd-A-3">
-  <span className="text-danger">Multiple Modules</span> | <strong>Not available until</strong> May 6 at 12:00am | &nbsp;
-  <strong>Due</strong> May 13 at 11:59pm | 100 pts
-</p></Form.Label>
-        </Form.Group>
-        <div className="float-end ms-auto">
-      <LessonControlButtons/>
-      </div>
-      
-    </ListGroup.Item>
-      </ListGroup>
-    </ListGroup.Item>
-  </ListGroup>  */}
-
-  
