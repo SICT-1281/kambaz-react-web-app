@@ -34,9 +34,9 @@ export default function Dashboard({
   refresh: number;
 }) {
   const dispatch = useDispatch();
-  const {enrollments} = useSelector(
-    (state: any) => state.enrollmentReducer
-  );
+  // const {enrollments} = useSelector(
+  //   (state: any) => state.enrollmentReducer
+  // );
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const [allCourses, setAllCourses] = useState<CourseType[]>([]);
 
