@@ -16,7 +16,7 @@ export default function Lab4() {
         alert("Hello");
       }    
     return (
-      <div id="wd-lab3" className="container">
+      <div id="wd-lab4" className="container">
         <h2>Lab 4</h2>
         <ClickEvent />
         <PassingDataOnEvent />

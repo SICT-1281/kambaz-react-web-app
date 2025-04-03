@@ -4,6 +4,8 @@ import { useParams , useLocation } from "react-router";
 import { addAssignment, updateAssignment } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from 'react';
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 export default function EditAssignment() {
   const { cid } = useParams();
   const { pathname } = useLocation();
@@ -12,6 +14,7 @@ export default function EditAssignment() {
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const assignment = assignments.find((a: any) => a._id === assignmentId);
   const dispatch = useDispatch();
+
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -81,35 +84,62 @@ export default function EditAssignment() {
 
   const handleSave = () => {
     if (!assignments.some((a: any) => a._id === assignmentId)) {
-      dispatch(
-        addAssignment({
-          _id: assignmentId,
-          course: cid,
-          title,
-          description,
-          points,
-          startdate,
-          duedate,
-          untildate,
-          modules: assignment?.modules || "",
-        })
-      );
+      console.log("test");
+      createAssignmentForCourse();
     } else {
-      dispatch(
-        updateAssignment({
-          _id: assignmentId,
-          course: cid,
-          title,
-          description,
-          points,
-          startdate,
-          duedate,
-          untildate,
-          modules: assignment?.modules || "",
-        })
-      );
+      console.log(assignment);
+        saveAssignment(assignment);
     }
   };
+
+   const createAssignmentForCourse = async () => {
+        console.log("cid:", cid, " assignmentId:", assignmentId);
+        if (!cid) return;
+        const newAssignment = { title: title, course: cid, description: description, points: points, startdate: startdate, duedate: duedate, untildate: untildate };
+        const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+        console.log(assignment);
+        dispatch(addAssignment({
+          _id: assignmentId,
+          course: cid,
+          title,
+          description,
+          points,
+          startdate,
+          duedate,
+          untildate,
+          modules: assignment?.modules || "",
+        }));
+      };
+
+      const saveAssignment = async (assignment: any) => {
+        console.log(assignment);
+        const upassignment= await assignmentsClient.updateAssignment({
+          _id: assignmentId,
+          course: cid,
+          title,
+          description,
+          points,
+          startdate,
+          duedate,
+          untildate,
+          modules: assignment?.modules || "",
+        });
+        console.log(assignment);
+        console.log(upassignment);
+        dispatch(updateAssignment({
+          _id: assignmentId,
+          course: cid,
+          title,
+          description,
+          points,
+          startdate,
+          duedate,
+          untildate,
+          modules: assignment?.modules || "",
+        }));
+      };
+    
+    
 
 
   return (

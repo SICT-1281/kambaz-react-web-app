@@ -9,14 +9,33 @@ import { Form} from 'react-bootstrap';
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment }
+import { setAssignment, deleteAssignment }
   from "./reducer";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
+import { useEffect } from "react";
 export default function Assignments() 
 {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
+
+  const fetchAssignments = async () => {
+      const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+      dispatch(setAssignment(assignments));
+    };
+    useEffect(() => {
+      fetchAssignments();
+    }, []);
+
+  const removeAssignment = async (assignmentId: string) => {
+      await assignmentsClient.deleteAssignment(assignmentId);
+      dispatch(deleteAssignment(assignmentId));
+    };
+  
+
+
   const isFaculty = currentUser?.role === "FACULTY";
     return (
       <div>
@@ -35,10 +54,7 @@ export default function Assignments()
       <ListGroup className="wd-lessons rounded-0">
 
       {assignments
-          .filter((assignment: any) => assignment.course === cid)
           .map((assignment: any) => (
-
-            
       <ListGroup.Item className="wd-lesson p-3 ps-1 d-flex align-items-center">
       
       <BsGripVertical className="fs-3" /> 
@@ -73,7 +89,7 @@ export default function Assignments()
       
       <LessonControlButtons assignmentId={assignment._id}
       deleteAssignment={(assignmentId) => {
-        dispatch(deleteAssignment(assignmentId));
+        removeAssignment(assignmentId);
       }}
 /> )}
       </div>
