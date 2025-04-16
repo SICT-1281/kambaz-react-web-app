@@ -11,6 +11,12 @@ export default function AssignmentControls() {
   const { cid } = useParams();
   const handleAddAssignment = () => {
     const newId = uuidv4();
+        // dispatch(
+    //   addAssignment({
+    //     _id: newId,
+    //     course: cid,
+    //   })
+    // );
     navigate(`/Kambaz/Courses/${cid}/Assignments/${newId}`);
   };
 

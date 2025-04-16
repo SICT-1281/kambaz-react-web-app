@@ -1,5 +1,5 @@
 import { Form, Row, Col, Button, Card } from 'react-bootstrap'; 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useParams , useLocation } from "react-router";
 import { addAssignment, updateAssignment } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,7 +13,6 @@ export default function EditAssignment() {
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const assignment = assignments.find((a: any) => a._id === assignmentId);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
 
   const [title, setTitle] = useState("");
@@ -99,7 +98,6 @@ export default function EditAssignment() {
         const assignment = await assignmentsClient.createAssignment(cid, newAssignment);
         console.log(assignment);
         dispatch(addAssignment(assignment));
-        navigate(`/Kambaz/Courses/${cid}/Assignments`);
     };
 
     const saveAssignment = async (assignment: any) => {
@@ -114,7 +112,6 @@ export default function EditAssignment() {
         };
         const upassignment = await assignmentsClient.updateAssignment(updatedAssignment);
         dispatch(updateAssignment(upassignment));
-        navigate(`/Kambaz/Courses/${cid}/Assignments`);
     };
     
     
