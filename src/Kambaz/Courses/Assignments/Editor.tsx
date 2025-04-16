@@ -1,10 +1,9 @@
 import { Form, Row, Col, Button, Card } from 'react-bootstrap'; 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams , useLocation } from "react-router";
 import { addAssignment, updateAssignment } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from 'react';
-import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
 export default function EditAssignment() {
   const { cid } = useParams();
@@ -14,6 +13,7 @@ export default function EditAssignment() {
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const assignment = assignments.find((a: any) => a._id === assignmentId);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
 
   const [title, setTitle] = useState("");
@@ -96,48 +96,26 @@ export default function EditAssignment() {
         console.log("cid:", cid, " assignmentId:", assignmentId);
         if (!cid) return;
         const newAssignment = { title: title, course: cid, description: description, points: points, startdate: startdate, duedate: duedate, untildate: untildate };
-        const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+        const assignment = await assignmentsClient.createAssignment(cid, newAssignment);
         console.log(assignment);
-        dispatch(addAssignment({
-          _id: assignmentId,
-          course: cid,
-          title,
-          description,
-          points,
-          startdate,
-          duedate,
-          untildate,
-          modules: assignment?.modules || "",
-        }));
-      };
+        dispatch(addAssignment(assignment));
+        navigate(`/Kambaz/Courses/${cid}/Assignments`);
+    };
 
-      const saveAssignment = async (assignment: any) => {
-        console.log(assignment);
-        const upassignment= await assignmentsClient.updateAssignment({
-          _id: assignmentId,
-          course: cid,
-          title,
-          description,
-          points,
-          startdate,
-          duedate,
-          untildate,
-          modules: assignment?.modules || "",
-        });
-        console.log(assignment);
-        console.log(upassignment);
-        dispatch(updateAssignment({
-          _id: assignmentId,
-          course: cid,
-          title,
-          description,
-          points,
-          startdate,
-          duedate,
-          untildate,
-          modules: assignment?.modules || "",
-        }));
-      };
+    const saveAssignment = async (assignment: any) => {
+        const updatedAssignment = {
+            ...assignment,
+            title,
+            description,
+            points,
+            startdate,
+            duedate,
+            untildate
+        };
+        const upassignment = await assignmentsClient.updateAssignment(updatedAssignment);
+        dispatch(updateAssignment(upassignment));
+        navigate(`/Kambaz/Courses/${cid}/Assignments`);
+    };
     
     
 
