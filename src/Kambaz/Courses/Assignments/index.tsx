@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setAssignment, deleteAssignment }
   from "./reducer";
-import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
 import { useEffect } from "react";
 export default function Assignments() 
