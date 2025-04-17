@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from 'react';
 import * as assignmentsClient from "./client";
 export default function EditAssignment() {
-  const { cid } = useParams();
+  const { cid } = useParams(); // courseid
   const { pathname } = useLocation();
   const pathSegments = pathname.split("/");
   const assignmentId = pathSegments[pathSegments.length - 1];
