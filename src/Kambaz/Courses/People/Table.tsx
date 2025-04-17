@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 export default function PeopleTable({ users: propUsers = [] }: { users?: any[] }) {
   const { cid } = useParams();
   const [users, setUsers] = useState<any[]>(propUsers);
-  console.log(users);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   
   const fetchUsersForCourse = async () => {

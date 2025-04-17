@@ -91,28 +91,48 @@ export default function EditAssignment() {
     }
   };
 
-   const createAssignmentForCourse = async () => {
-        console.log("cid:", cid, " assignmentId:", assignmentId);
-        if (!cid) return;
-        const newAssignment = { title: title, course: cid, description: description, points: points, startdate: startdate, duedate: duedate, untildate: untildate };
-        const assignment = await assignmentsClient.createAssignment(cid, newAssignment);
-        console.log(assignment);
-        dispatch(addAssignment(assignment));
-    };
+  const createAssignmentForCourse = async () => {
+    console.log("cid:", cid, " assignmentId:", assignmentId);
+    if (!cid) return;
+    const newAssignment = { title: title, course: cid, description: description, points: points, startdate: startdate, duedate: duedate, untildate: untildate };
+    const assignment = await assignmentsClient.createAssignment(cid, newAssignment);
+    dispatch(addAssignment({
+      _id: assignmentId,
+      course: cid,
+      title,
+      description,
+      points,
+      startdate,
+      duedate,
+      untildate,
+      modules: assignment?.modules || "",
+    }));
+  };
 
-    const saveAssignment = async (assignment: any) => {
-        const updatedAssignment = {
-            ...assignment,
-            title,
-            description,
-            points,
-            startdate,
-            duedate,
-            untildate
-        };
-        const upassignment = await assignmentsClient.updateAssignment(updatedAssignment);
-        dispatch(updateAssignment(upassignment));
-    };
+  const saveAssignment = async (assignment: any) => {
+    await assignmentsClient.updateAssignment({
+      _id: assignmentId,
+      course: cid,
+      title,
+      description,
+      points,
+      startdate,
+      duedate,
+      untildate,
+      modules: assignment?.modules || "",
+    });
+    dispatch(updateAssignment({
+      _id: assignmentId,
+      course: cid,
+      title,
+      description,
+      points,
+      startdate,
+      duedate,
+      untildate,
+      modules: assignment?.modules || "",
+    }));
+  };
     
     
 
